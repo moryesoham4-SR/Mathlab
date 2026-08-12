@@ -1,0 +1,9 @@
+# No external dependencies needed for the GCD/Euclidean Algorithm endpoint.
+# Uncomment these when you add the OCR endpoint (see api/ocr.py note):
+# pytesseract==0.3.10
+# Pillow==10.4.0
+#
+# IMPORTANT: pytesseract requires the tesseract system binary, which is
+# NOT available on Vercel's Python serverless runtime by default. Running
+# OCR there will fail until you either bundle a static tesseract binary
+# or switch to a cloud OCR API (Google Vision, AWS Textract, etc.).
