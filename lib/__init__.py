@@ -1,3 +1,0 @@
-"""
-Mathlab Solvers Package
-"""
