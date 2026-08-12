@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MathMate — Your Smart Mathematics Companion</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" />
+
+  <style>
+    /* MathMate — Modern Dark Glassmorphism Design System */
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap');
+
+    :root {
+      --bg-dark: #090d16;
+      --bg-card: rgba(22, 30, 46, 0.85);
+      --bg-card-hover: rgba(30, 41, 62, 0.92);
+      --bg-input: #0e1526;
+      --border-card: rgba(255, 255, 255, 0.12);
+      --border-active: rgba(56, 189, 248, 0.5);
+      
+      --accent-cyan: #38bdf8;
+      --accent-blue: #3b82f6;
+      --accent-purple: #a855f7;
+      --accent-emerald: #34d399;
+      --accent-rose: #fb7185;
+      --accent-amber: #fbbf24;
+
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-sub: #cbd5e1;
+
+      --shadow-glow: 0 0 25px rgba(56, 189, 248, 0.2);
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 10% 10%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+        radial-gradient(at 90% 90%, rgba(168, 85, 247, 0.12) 0px, transparent 50%);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* Header & Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(9, 13, 22, 0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-card);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-main);
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(14, 21, 38, 0.9);
+      padding: 0.3rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-card);
+      flex-wrap: wrap;
+    }
+
+    .nav-tab {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.5rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .nav-tab:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-tab.active {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(168, 85, 247, 0.25));
+      color: var(--accent-cyan);
+      border: 1px solid var(--border-active);
+    }
+
+    /* Container & Tab Views */
+    .main-container {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1.5rem 4rem 1.5rem;
+    }
+
+    .tab-view {
+      display: none;
+      animation: fadeIn 0.35s ease;
+    }
+
+    .tab-view.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Glass Cards */
+    .glass-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Dashboard Grid */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+
+    .stat-icon.cyan { background: rgba(56, 189, 248, 0.2); color: var(--accent-cyan); }
+    .stat-icon.purple { background: rgba(168, 85, 247, 0.2); color: var(--accent-purple); }
+    .stat-icon.emerald { background: rgba(52, 211, 153, 0.2); color: var(--accent-emerald); }
+
+    .stat-val {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+
+    .stat-lbl {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Input Components */
+    .input-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .input-tab-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-card);
+      color: var(--text-muted);
+      padding: 0.4rem 0.9rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .input-tab-btn.active {
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--accent-cyan);
+      border-color: var(--border-active);
+    }
+
+    .math-textarea {
+      width: 100%;
+      min-height: 110px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      color: var(--text-main);
+      font-size: 1.05rem;
+      font-family: inherit;
+      resize: vertical;
+      transition: var(--transition);
+    }
+
+    .math-textarea:focus {
+      outline: none;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+
+    .topic-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .pill-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-card);
+      color: var(--text-sub);
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .pill-btn:hover, .pill-btn.active {
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--accent-cyan);
+      border-color: var(--accent-cyan);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: #0b0f19;
+      border: none;
+      padding: 0.75rem 1.8rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-card);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    /* Solution Display */
+    .solution-page {
+      display: none;
+      margin-top: 2rem;
+    }
+
+    .solution-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-card);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .topic-badge {
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--accent-cyan);
+      border: 1px solid var(--border-active);
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .step-card {
+      background: rgba(14, 21, 38, 0.95);
+      border-left: 4px solid var(--accent-cyan);
+      border-radius: var(--radius-sm);
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 0.75rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.95rem;
+    }
+
+    .final-answer-box {
+      background: linear-gradient(135deg, rgba(52, 211, 153, 0.15), rgba(56, 189, 248, 0.15));
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      margin-top: 1.5rem;
+      color: var(--accent-emerald);
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    /* Labs & Argand Canvas */
+    .lab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .canvas-wrap {
+      width: 100%;
+      height: 260px;
+      background: #090e18;
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Formula Library Cards */
+    .formula-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .formula-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+    }
+
+    .formula-title {
+      font-weight: 600;
+      color: var(--accent-cyan);
+      margin-bottom: 0.5rem;
+    }
+
+    .formula-expr {
+      background: var(--bg-input);
+      padding: 0.75rem;
+      border-radius: var(--radius-sm);
+      margin: 0.75rem 0;
+      text-align: center;
+    }
+
+    /* Practice & Quiz */
+    .quiz-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-card);
+      color: var(--text-main);
+      padding: 0.85rem 1.2rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 0.65rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .option-btn:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent-cyan);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-box {
+      background: #121929;
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg);
+      width: 90%;
+      max-width: 600px;
+      padding: 1.75rem;
+    }
+
+    /* Toast */
+    .toast-msg {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #1e293b;
+      border: 1px solid var(--accent-cyan);
+      color: var(--text-main);
+      padding: 0.75rem 1.4rem;
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      z-index: 300;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Print Styles for PDF Download */
+    @media print {
+      body { background: #ffffff; color: #000000; }
+      .navbar, .action-bar, .input-tabs, .pill-btn, .btn-primary { display: none !important; }
+      .main-container { max-width: 100%; margin: 0; padding: 0; }
+      .glass-card, .step-card { background: #ffffff; border: 1px solid #ccc; color: #000; }
+      .final-answer-box { background: #f0fdf4; border: 1px solid #22c55e; color: #15803d; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <a href="#" class="brand" onclick="switchTab('dashboard')">
+      <div class="brand-icon">🧮</div>
+      <span>MathMate</span>
+    </a>
+
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-tab="dashboard"><i class="fas fa-home"></i> Dashboard</button>
+      <button class="nav-tab" data-tab="solver"><i class="fas fa-wand-magic-sparkles"></i> Solve</button>
+      <button class="nav-tab" data-tab="labs"><i class="fas fa-flask"></i> Labs</button>
+      <button class="nav-tab" data-tab="learn"><i class="fas fa-graduation-cap"></i> Learn</button>
+      <button class="nav-tab" data-tab="practice"><i class="fas fa-bullseye"></i> Practice</button>
+      <button class="nav-tab" data-tab="formulas"><i class="fas fa-book-bookmark"></i> Formulas</button>
+      <button class="nav-tab" data-tab="saved"><i class="fas fa-bookmark"></i> Saved</button>
+    </nav>
+  </header>
+
+  <!-- Main App Container -->
+  <main class="main-container">
+
+    <!-- 1. DASHBOARD VIEW -->
+    <section id="tab-dashboard" class="tab-view active">
+      <div class="glass-card" style="background: linear-gradient(135deg, rgba(56,189,248,0.15), rgba(168,85,247,0.15));">
+        <h1 style="font-family:'Outfit'; font-size:1.8rem;">Welcome to MathMate 🚀</h1>
+        <p style="color:var(--text-muted); margin-top:0.3rem;">
+          Your intelligent mathematical companion for step-by-step problem solving, interactive visualization, and concept mastery.
+        </p>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="dashboard-grid">
+        <div class="stat-card">
+          <div class="stat-icon cyan"><i class="fas fa-calculator"></i></div>
+          <div>
+            <div class="stat-val stat-solved">0</div>
+            <div class="stat-lbl">Questions Solved</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon emerald"><i class="fas fa-chart-line"></i></div>
+          <div>
+            <div class="stat-val stat-score">85%</div>
+            <div class="stat-lbl">Practice Score</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple"><i class="fas fa-bookmark"></i></div>
+          <div>
+            <div class="stat-val stat-saved">0</div>
+            <div class="stat-lbl">Saved Solutions</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Shortcuts -->
+      <div class="glass-card">
+        <div class="card-title"><i class="fas fa-bolt" style="color:var(--accent-amber)"></i> Quick Action Shortcuts</div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem; margin-top:1rem;">
+          <button class="btn-secondary" style="padding:1rem; justify-content:center;" onclick="fillQuestion('Find gcd(252, 105) using Euclidean Algorithm')">
+            <i class="fas fa-divide"></i> GCD Calculator
+          </button>
+          <button class="btn-secondary" style="padding:1rem; justify-content:center;" onclick="fillQuestion('Convert 3 + 4i into polar form')">
+            <i class="fas fa-compass"></i> Complex Polar Form
+          </button>
+          <button class="btn-secondary" style="padding:1rem; justify-content:center;" onclick="fillQuestion('Calculate 10C4 combinations')">
+            <i class="fas fa-cubes"></i> P & C Solver
+          </button>
+          <button class="btn-secondary" style="padding:1rem; justify-content:center;" onclick="switchTab('practice')">
+            <i class="fas fa-bullseye"></i> Start Practice Quiz
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. SOLVER VIEW -->
+    <section id="tab-solver" class="tab-view">
+      <div class="glass-card">
+        <div class="card-title"><i class="fas fa-wand-magic-sparkles" style="color:var(--accent-cyan)"></i> Step-by-Step Solver</div>
+
+        <div class="input-tabs">
+          <button class="input-tab-btn active"><i class="fas fa-keyboard"></i> Type</button>
+          <button class="input-tab-btn" onclick="showToast('Clipboard paste ready!')"><i class="fas fa-paste"></i> Paste</button>
+          <button class="input-tab-btn" onclick="showToast('Drag & drop image scan mode enabled')"><i class="fas fa-camera"></i> Scan</button>
+        </div>
+
+        <textarea id="question-input" class="math-textarea" placeholder="e.g. Find gcd(252, 105) using the Euclidean algorithm OR Convert 3 + 4i to polar form..."></textarea>
+
+        <div class="topic-pills">
+          <span style="font-size:0.85rem; color:var(--text-muted); align-self:center;">Quick Try:</span>
+          <button class="pill-btn" onclick="fillQuestion('Find gcd(252, 105) using Euclidean algorithm')">GCD (252, 105)</button>
+          <button class="pill-btn" onclick="fillQuestion('Convert 3 + 4i to polar form')">Complex (3 + 4i)</button>
+          <button class="pill-btn" onclick="fillQuestion('Find (1 + i)^8 using De Moivre theorem')">De Moivre Power</button>
+          <button class="pill-btn" onclick="fillQuestion('Calculate 10C4 combinations')">10C4 Combinations</button>
+          <button class="pill-btn" onclick="fillQuestion('Is f(x) = 2x + 3 injective and surjective from R to R?')">Function Proof</button>
+          <button class="pill-btn" onclick="fillQuestion('Find limit x->2 of (x^2 - 4)/(x - 2)')">Limit (x->2)</button>
+        </div>
+
+        <button class="btn-primary" onclick="solveQuestion()"><i class="fas fa-play"></i> Solve Question</button>
+      </div>
+
+      <!-- Solution Output Card -->
+      <div id="solution-page" class="solution-page"></div>
+    </section>
+
+    <!-- 3. LABS VIEW -->
+    <section id="tab-labs" class="tab-view">
+      <div class="glass-card">
+        <div class="card-title"><i class="fas fa-flask" style="color:var(--accent-purple)"></i> Interactive Mathematics Labs</div>
+        <p style="color:var(--text-muted); font-size:0.9rem;">
+          Explore interactive calculators and graphical visualizers for all 6 core mathematical topics.
+        </p>
+      </div>
+
+      <div class="lab-grid">
+        <!-- Argand Plane Lab -->
+        <div class="glass-card">
+          <h3 style="color:var(--accent-cyan); font-family:'Outfit';">Complex Argand Plane Lab</h3>
+          <p style="font-size:0.85rem; color:var(--text-muted); margin:0.4rem 0 1rem 0;">Visualize complex vector \(z = a + bi\) on the Argand plane.</p>
+          <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
+            <input type="number" id="argand-real" value="3" class="math-textarea" style="min-height:38px; padding:0.4rem;" placeholder="Real (a)" onchange="updateArgandFromInputs()" />
+            <input type="number" id="argand-imag" value="4" class="math-textarea" style="min-height:38px; padding:0.4rem;" placeholder="Imag (b)" onchange="updateArgandFromInputs()" />
+            <button class="btn-primary" style="padding:0.4rem 0.8rem;" onclick="updateArgandFromInputs()">Plot</button>
+          </div>
+          <div class="canvas-wrap">
+            <canvas id="argand-canvas" width="300" height="240"></canvas>
+          </div>
+        </div>
+
+        <!-- Euclidean Lab -->
+        <div class="glass-card">
+          <h3 style="color:var(--accent-emerald); font-family:'Outfit';">GCD Division Table Lab</h3>
+          <p style="font-size:0.85rem; color:var(--text-muted); margin:0.4rem 0 1rem 0;">Generate step-by-step division algorithm tables.</p>
+          <button class="btn-secondary" style="width:100%; justify-content:center;" onclick="fillQuestion('Find gcd(1071, 462)')">Run GCD (1071, 462)</button>
+        </div>
+
+        <!-- De Moivre Lab -->
+        <div class="glass-card">
+          <h3 style="color:var(--accent-amber); font-family:'Outfit';">De Moivre N-th Roots Lab</h3>
+          <p style="font-size:0.85rem; color:var(--text-muted); margin:0.4rem 0 1rem 0;">Calculate roots of unity distributed evenly on the complex unit circle.</p>
+          <button class="btn-secondary" style="width:100%; justify-content:center;" onclick="fillQuestion('Find 3 cube roots of 8')">Run Cube Roots of 8</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. LEARN VIEW -->
+    <section id="tab-learn" class="tab-view">
+      <div class="glass-card">
+        <div class="card-title"><i class="fas fa-graduation-cap" style="color:var(--accent-cyan)"></i> Learn Center & Concept Guides</div>
+        <p style="color:var(--text-muted)">Master core definitions, formulas, and worked examples step-by-step.</p>
+      </div>
+
+      <div class="formula-grid">
+        <div class="formula-card">
+          <div class="formula-title">Euclidean Algorithm & GCD</div>
+          <p style="font-size:0.88rem; color:var(--text-sub)">Calculates greatest common divisor by repeated division algorithm \(a = bq + r\).</p>
+          <div class="formula-expr">\(\gcd(a, b) = \gcd(b, a \bmod b)\)</div>
+        </div>
+
+        <div class="formula-card">
+          <div class="formula-title">Complex Polar Form</div>
+          <p style="font-size:0.88rem; color:var(--text-sub)">Converts Cartesian \(a + bi\) to polar form using modulus \(r\) and argument \(\theta\).</p>
+          <div class="formula-expr">\(z = r(\cos\theta + i\sin\theta)\)</div>
+        </div>
+
+        <div class="formula-card">
+          <div class="formula-title">De Moivre's Theorem</div>
+          <p style="font-size:0.88rem; color:var(--text-sub)">Powers and \(n\)-th roots of complex numbers in polar form.</p>
+          <div class="formula-expr">\(z^n = r^n(\cos n\theta + i\sin n\theta)\)</div>
+        </div>
+
+        <div class="formula-card">
+          <div class="formula-title">Combinations & Permutations</div>
+          <p style="font-size:0.88rem; color:var(--text-sub)">Selections and arrangements of \(r\) items from \(n\) distinct elements.</p>
+          <div class="formula-expr">\(C(n, r) = \frac{n!}{r!(n-r)!}\)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. PRACTICE & QUIZ VIEW -->
+    <section id="tab-practice" class="tab-view">
+      <div class="glass-card" style="text-align:center;">
+        <h2 style="font-family:'Outfit';">🎯 Practice & Quiz Challenge</h2>
+        <p style="color:var(--text-muted); margin-top:0.4rem;">Test your math skills with programmatically generated questions and instant feedback.</p>
+        <div style="display:flex; justify-content:center; gap:1rem; margin-top:1.25rem;">
+          <button class="btn-primary" onclick="startQuiz('mixed')"><i class="fas fa-play"></i> Start Mixed Quiz</button>
+          <button class="btn-secondary" onclick="startQuiz('gcd')">GCD Quiz</button>
+          <button class="btn-secondary" onclick="startQuiz('complex')">Complex Quiz</button>
+        </div>
+      </div>
+
+      <div id="quiz-container" style="margin-top:1.5rem;"></div>
+    </section>
+
+    <!-- 6. FORMULAS VIEW -->
+    <section id="tab-formulas" class="tab-view">
+      <div class="glass-card">
+        <div class="card-title"><i class="fas fa-book-bookmark" style="color:var(--accent-purple)"></i> Central Formula Library</div>
+        <p style="color:var(--text-muted)">Quick reference sheet for formulas across all 6 mathematical topics.</p>
+      </div>
+
+      <div class="formula-grid">
+        <div class="formula-card">
+          <div class="formula-title">Permutations Formula</div>
+          <div class="formula-expr">\(P(n, r) = \frac{n!}{(n-r)!}\)</div>
+          <button class="btn-secondary" style="width:100%; justify-content:center;" onclick="fillQuestion('Calculate P(7, 3)')">Try in Calculator</button>
+        </div>
+
+        <div class="formula-card">
+          <div class="formula-title">Combinations Formula</div>
+          <div class="formula-expr">\(C(n, r) = \frac{n!}{r!(n-r)!}\)</div>
+          <button class="btn-secondary" style="width:100%; justify-content:center;" onclick="fillQuestion('Calculate 10C4 combinations')">Try in Calculator</button>
+        </div>
+
+        <div class="formula-card">
+          <div class="formula-title">Trigonometric Limit</div>
+          <div class="formula-expr">\(\lim_{x \to 0} \frac{\sin x}{x} = 1\)</div>
+          <button class="btn-secondary" style="width:100%; justify-content:center;" onclick="fillQuestion('Find limit x->0 of sin(x)/x')">Try in Calculator</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. SAVED VIEW -->
+    <section id="tab-saved" class="tab-view">
+      <div class="glass-card">
+        <div class="card-title"><i class="fas fa-bookmark" style="color:var(--accent-cyan)"></i> My Saved Solutions</div>
+        <p style="color:var(--text-muted)">Review and export your saved mathematical derivations.</p>
+      </div>
+
+      <div id="saved-list"></div>
+    </section>
+
+  </main>
+
+  <!-- Modal for Editing Solutions -->
+  <div id="edit-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h3 style="font-family:'Outfit'; margin-bottom:1rem;">✏️ Edit Solution Steps</h3>
+      <textarea id="edit-steps-input" class="math-textarea" style="min-height:160px;"></textarea>
+      <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1rem;">
+        <button class="btn-secondary" onclick="closeEditModal()">Cancel</button>
+        <button class="btn-primary" onclick="saveEditedSolution()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- KaTeX JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <script>
+    /**
+     * MathMate — Application Logic
+     */
+
+    const state = {
+      activeTab: 'dashboard',
+      currentSolution: null,
+      savedSolutions: JSON.parse(localStorage.getItem('mathmate_saved') || '[]'),
+      history: JSON.parse(localStorage.getItem('mathmate_history') || '[]'),
+      stats: JSON.parse(localStorage.getItem('mathmate_stats') || '{"solved": 0, "quizScore": 85}'),
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initTabs();
+      updateStatsUI();
+      renderSavedList();
+      initArgandCanvas();
+    });
+
+    function initTabs() {
+      const tabs = document.querySelectorAll('.nav-tab');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const target = tab.dataset.tab;
+          switchTab(target);
+        });
+      });
+    }
+
+    function switchTab(tabId) {
+      state.activeTab = tabId;
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tabId));
+      document.querySelectorAll('.tab-view').forEach(v => v.classList.toggle('active', v.id === `tab-${tabId}`));
+    }
+
+    function updateStatsUI() {
+      document.querySelectorAll('.stat-solved').forEach(el => el.textContent = state.stats.solved);
+      document.querySelectorAll('.stat-saved').forEach(el => el.textContent = state.savedSolutions.length);
+      document.querySelectorAll('.stat-score').forEach(el => el.textContent = `${state.stats.quizScore}%`);
+    }
+
+    function fillQuestion(text) {
+      switchTab('solver');
+      const textarea = document.getElementById('question-input');
+      if (textarea) {
+        textarea.value = text;
+        textarea.focus();
+      }
+    }
+
+    function showToast(msg) {
+      const existing = document.querySelector('.toast-msg');
+      if (existing) existing.remove();
+      
+      const toast = document.createElement('div');
+      toast.className = 'toast-msg';
+      toast.innerHTML = `✨ ${msg}`;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2500);
+    }
+
+    async function solveQuestion() {
+      const inputEl = document.getElementById('question-input');
+      const question = inputEl.value.trim();
+      const solutionPage = document.getElementById('solution-page');
+
+      if (!question) {
+        showToast('Please enter a math question first!');
+        return;
+      }
+
+      solutionPage.style.display = 'block';
+      solutionPage.innerHTML = '<div class="glass-card"><span class="topic-badge">🧮 Solving Math Problem...</span></div>';
+
+      try {
+        const res = await fetch('/api/solve', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question })
+        });
+        const data = await res.json();
+
+        if (!data.ok) {
+          solutionPage.innerHTML = `
+            <div class="glass-card" style="border-color: var(--accent-rose);">
+              <h3 style="color: var(--accent-rose);">⚠️ Calculation Error</h3>
+              <p style="margin-top: 0.5rem;">${data.error || 'Could not process this question.'}</p>
+            </div>`;
+          return;
+        }
+
+        state.currentSolution = {
+          id: `MM-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
+          question,
+          data,
+          timestamp: new Date().toLocaleString(),
+        };
+
+        state.stats.solved += 1;
+        localStorage.setItem('mathmate_stats', JSON.stringify(state.stats));
+        state.history.unshift(state.currentSolution);
+        if (state.history.length > 50) state.history.pop();
+        localStorage.setItem('mathmate_history', JSON.stringify(state.history));
+        updateStatsUI();
+
+        renderSolutionPage(state.currentSolution);
+      } catch (err) {
+        solutionPage.innerHTML = `<div class="glass-card" style="color:var(--accent-rose)">Network error: ${err.message}</div>`;
+      }
+    }
+
+    function renderSolutionPage(solutionItem) {
+      const data = solutionItem.data;
+      const page = document.getElementById('solution-page');
+
+      let stepsHtml = '';
+      (data.explanation || []).forEach((step, idx) => {
+        stepsHtml += `<div class="step-card">${formatLaTeXText(step)}</div>`;
+      });
+
+      let bonusHtml = '';
+      if (data.bonus_bezout) {
+        bonusHtml = `<div class="step-card" style="border-color:var(--accent-purple)">
+          <strong>Bézout's Identity:</strong> ${formatLaTeXText(data.bonus_bezout.equation)}
+        </div>`;
+      }
+
+      page.innerHTML = `
+        <div class="glass-card" id="printable-solution">
+          <div class="solution-header">
+            <div>
+              <span class="topic-badge">${data.topic_label || 'Math Solution'}</span>
+              <h2 style="margin-top:0.5rem; font-family:'Outfit';">${escapeHtml(solutionItem.question)}</h2>
+            </div>
+            <div class="action-bar">
+              <button class="btn-secondary" onclick="copyText()"><i class="far fa-copy"></i> Copy</button>
+              <button class="btn-secondary" onclick="copyLaTeX()"><i class="fas fa-code"></i> LaTeX</button>
+              <button class="btn-secondary" onclick="openEditModal()"><i class="far fa-edit"></i> Edit</button>
+              <button class="btn-secondary" onclick="saveSolution()"><i class="far fa-bookmark"></i> Save</button>
+              <button class="btn-secondary" onclick="shareSolution()"><i class="fas fa-share-alt"></i> Share</button>
+              <button class="btn-primary" onclick="downloadPDF()"><i class="fas fa-file-pdf"></i> Download PDF</button>
+            </div>
+          </div>
+
+          <h4 style="color:var(--text-muted); margin-bottom:0.75rem;">Step-by-Step Derivation:</h4>
+          ${stepsHtml}
+          ${bonusHtml}
+
+          <div class="final-answer-box">
+            Final Answer: ${formatLaTeXText(data.answer)}
+          </div>
+        </div>
+      `;
+
+      if (window.renderMathInElement) {
+        renderMathInElement(page, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\(', right: '\\)', display: false},
+            {left: '\\[', right: '\\]', display: true}
+          ]
+        });
+      }
+    }
+
+    function formatLaTeXText(text) {
+      if (!text) return '';
+      return escapeHtml(text)
+        .replace(/\\times|×/g, '×')
+        .replace(/\\sqrt/g, '√')
+        .replace(/\\theta/g, 'θ');
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function copyText() {
+      if (!state.currentSolution) return;
+      const data = state.currentSolution.data;
+      const text = `Question: ${state.currentSolution.question}\n\nSteps:\n${(data.explanation || []).join('\n')}\n\nAnswer: ${data.answer}`;
+      navigator.clipboard.writeText(text);
+      showToast('Copied solution to clipboard!');
+    }
+
+    function copyLaTeX() {
+      if (!state.currentSolution) return;
+      const data = state.currentSolution.data;
+      const latex = `\\begin{equation}\n  \\text{Question: } ${state.currentSolution.question}\n  \\quad \\Rightarrow \\quad ${data.answer}\n\\end{equation}`;
+      navigator.clipboard.writeText(latex);
+      showToast('Copied LaTeX formula to clipboard!');
+    }
+
+    function saveSolution() {
+      if (!state.currentSolution) return;
+      const exists = state.savedSolutions.some(item => item.id === state.currentSolution.id);
+      if (!exists) {
+        state.savedSolutions.unshift(state.currentSolution);
+        localStorage.setItem('mathmate_saved', JSON.stringify(state.savedSolutions));
+        updateStatsUI();
+        renderSavedList();
+        showToast('Saved solution to your library!');
+      } else {
+        showToast('Solution is already saved!');
+      }
+    }
+
+    function shareSolution() {
+      if (!state.currentSolution) return;
+      const shareUrl = `${window.location.origin}/#${state.currentSolution.id}`;
+      navigator.clipboard.writeText(shareUrl);
+      showToast(`Share Link Generated: ${state.currentSolution.id} (Copied link)`);
+    }
+
+    function downloadPDF() {
+      window.print();
+    }
+
+    function openEditModal() {
+      if (!state.currentSolution) return;
+      const modal = document.getElementById('edit-modal');
+      const textarea = document.getElementById('edit-steps-input');
+      textarea.value = (state.currentSolution.data.explanation || []).join('\n');
+      modal.classList.add('active');
+    }
+
+    function closeEditModal() {
+      document.getElementById('edit-modal').classList.remove('active');
+    }
+
+    function saveEditedSolution() {
+      const newSteps = document.getElementById('edit-steps-input').value.split('\n').filter(s => s.trim());
+      if (state.currentSolution) {
+        state.currentSolution.data.explanation = newSteps;
+        renderSolutionPage(state.currentSolution);
+        closeEditModal();
+        showToast('Updated solution steps!');
+      }
+    }
+
+    function renderSavedList() {
+      const listEl = document.getElementById('saved-list');
+      if (!listEl) return;
+
+      if (state.savedSolutions.length === 0) {
+        listEl.innerHTML = '<p style="color:var(--text-muted)">No saved solutions yet. Click "Save" on any solution page!</p>';
+        return;
+      }
+
+      listEl.innerHTML = state.savedSolutions.map((item, idx) => `
+        <div class="glass-card" style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <span class="topic-badge">${item.data.topic_label || 'Math'}</span>
+            <h4 style="margin-top:0.3rem;">${escapeHtml(item.question)}</h4>
+            <small style="color:var(--text-muted)">Saved on ${item.timestamp}</small>
+          </div>
+          <div>
+            <button class="btn-secondary" onclick="viewSavedItem(${idx})">Open</button>
+            <button class="btn-secondary" onclick="removeSavedItem(${idx})" style="color:var(--accent-rose)"><i class="far fa-trash-alt"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function viewSavedItem(idx) {
+      state.currentSolution = state.savedSolutions[idx];
+      switchTab('solver');
+      renderSolutionPage(state.currentSolution);
+    }
+
+    function removeSavedItem(idx) {
+      state.savedSolutions.splice(idx, 1);
+      localStorage.setItem('mathmate_saved', JSON.stringify(state.savedSolutions));
+      updateStatsUI();
+      renderSavedList();
+      showToast('Removed from saved items.');
+    }
+
+    function initArgandCanvas() {
+      const canvas = document.getElementById('argand-canvas');
+      if (!canvas) return;
+      drawArgandPlane(3, 4);
+    }
+
+    function updateArgandFromInputs() {
+      const r = parseFloat(document.getElementById('argand-real').value) || 0;
+      const i = parseFloat(document.getElementById('argand-imag').value) || 0;
+      drawArgandPlane(r, i);
+    }
+
+    function drawArgandPlane(real, imag) {
+      const canvas = document.getElementById('argand-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+      const scale = 25;
+
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < w; x += scale) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+      }
+      for (let y = 0; y < h; y += scale) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+      }
+
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, h); ctx.stroke();
+
+      const px = cx + real * scale;
+      const py = cy - imag * scale;
+
+      const radius = Math.hypot(real, imag) * scale;
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(px, py);
+      ctx.stroke();
+
+      ctx.fillStyle = '#a855f7';
+      ctx.beginPath();
+      ctx.arc(px, py, 6, 0, 2 * Math.PI);
+      ctx.fill();
+
+      ctx.fillStyle = '#f1f5f9';
+      ctx.font = '12px Inter';
+      ctx.fillText(`z = ${real} + ${imag}i`, px + 8, py - 8);
+    }
+
+    /**
+     * Algorithmic Practice & Quiz Engine
+     */
+    const quizState = {
+      activeMode: 'mixed',
+      questions: [],
+      currentIndex: 0,
+      score: 0,
+    };
+
+    function generateQuestion(topicKey = 'mixed') {
+      const topics = ['gcd', 'complex', 'permcomb', 'limits', 'functions'];
+      const selectedTopic = topicKey === 'mixed' ? topics[Math.floor(Math.random() * topics.length)] : topicKey;
+
+      if (selectedTopic === 'gcd') {
+        const a = (Math.floor(Math.random() * 20) + 5) * 7;
+        const b = (Math.floor(Math.random() * 15) + 3) * 7;
+        const gcd = (x, y) => (y === 0 ? x : gcd(y, x % y));
+        const ans = gcd(a, b);
+        return {
+          topic: 'gcd',
+          topicLabel: 'Euclidean Algorithm & GCD',
+          question: `What is the greatest common divisor gcd(${a}, ${b})?`,
+          correctAnswer: `${ans}`,
+          options: shuffleOptions([`${ans}`, `${ans + 2}`, `${ans * 2}`, `${Math.max(1, ans - 3)}`]),
+          explanation: `Repeatedly apply division: gcd(${a}, ${b}) = ${ans}.`,
+        };
+      }
+
+      if (selectedTopic === 'complex') {
+        const a = Math.floor(Math.random() * 5) + 1;
+        const b = Math.floor(Math.random() * 5) + 1;
+        const mod = Math.sqrt(a * a + b * b);
+        const modStr = Number.isInteger(mod) ? `${mod}` : `√${a * a + b * b}`;
+        return {
+          topic: 'complex',
+          topicLabel: 'Complex Numbers',
+          question: `Find the modulus |z| of the complex number z = ${a} + ${b}i.`,
+          correctAnswer: modStr,
+          options: shuffleOptions([modStr, `${a + b}`, `√${a * a + b}`, `${a * b}`]),
+          explanation: `Modulus r = √(a² + b²) = √(${a}² + ${b}²) = ${modStr}.`,
+        };
+      }
+
+      if (selectedTopic === 'permcomb') {
+        const n = Math.floor(Math.random() * 5) + 5;
+        const r = Math.floor(Math.random() * 3) + 2;
+        const fact = n => (n <= 1 ? 1 : n * fact(n - 1));
+        const comb = (n, r) => fact(n) / (fact(r) * fact(n - r));
+        const ans = comb(n, r);
+        return {
+          topic: 'permcomb',
+          topicLabel: 'Permutations & Combinations',
+          question: `Calculate the number of combinations C(${n}, ${r}).`,
+          correctAnswer: `${ans}`,
+          options: shuffleOptions([`${ans}`, `${ans + 10}`, `${ans * 2}`, `${fact(n) / fact(n - r)}`]),
+          explanation: `C(${n}, ${r}) = ${n}! / [${r}! × (${n}-${r})!] = ${ans}.`,
+        };
+      }
+
+      if (selectedTopic === 'limits') {
+        const c = Math.floor(Math.random() * 5) + 1;
+        const ans = 2 * c;
+        return {
+          topic: 'limits',
+          topicLabel: 'Limits & Continuity',
+          question: `Evaluate the limit: lim (x → ${c}) (x² - ${c * c}) / (x - ${c}).`,
+          correctAnswer: `${ans}`,
+          options: shuffleOptions([`${ans}`, `${c}`, `0`, `∞`]),
+          explanation: `Factor numerator (x - ${c})(x + ${c}) / (x - ${c}) = x + ${c}. Substitute x = ${c} ⇒ ${ans}.`,
+        };
+      }
+
+      return {
+        topic: 'functions',
+        topicLabel: 'Functions & Bijectivity',
+        question: `Is the function f(x) = 2x + 5 from R to R injective and surjective?`,
+        correctAnswer: `Bijective (Both Injective and Surjective)`,
+        options: shuffleOptions([
+          `Bijective (Both Injective and Surjective)`,
+          `Injective only`,
+          `Surjective only`,
+          `Neither Injective nor Surjective`
+        ]),
+        explanation: `f(x) is linear with non-zero slope (a=2), so it is both one-to-one (injective) and onto (surjective).`,
+      };
+    }
+
+    function shuffleOptions(arr) {
+      const set = Array.from(new Set(arr));
+      return set.sort(() => Math.random() - 0.5);
+    }
+
+    function startQuiz(mode = 'mixed') {
+      quizState.activeMode = mode;
+      quizState.questions = Array.from({ length: 5 }, () => generateQuestion(mode));
+      quizState.currentIndex = 0;
+      quizState.score = 0;
+
+      renderQuizQuestion();
+    }
+
+    function renderQuizQuestion() {
+      const container = document.getElementById('quiz-container');
+      if (!container) return;
+
+      if (quizState.currentIndex >= quizState.questions.length) {
+        renderQuizResults();
+        return;
+      }
+
+      const q = quizState.questions[quizState.currentIndex];
+
+      container.innerHTML = `
+        <div class="quiz-box">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+            <span class="topic-badge">${q.topicLabel}</span>
+            <span style="color:var(--text-muted)">Question ${quizState.currentIndex + 1} of ${quizState.questions.length}</span>
+          </div>
+
+          <h3 style="font-family:'Outfit'; margin-bottom:1.5rem;">${q.question}</h3>
+
+          <div class="options-grid">
+            ${q.options.map(opt => `
+              <button class="option-btn" onclick="submitAnswer('${escapeJs(opt)}')">${escapeJs(opt)}</button>
+            `).join('')}
+          </div>
+
+          <div id="quiz-feedback" style="margin-top:1.25rem; display:none;"></div>
+        </div>
+      `;
+    }
+
+    function escapeJs(str) {
+      return String(str).replace(/'/g, "\\'");
+    }
+
+    function submitAnswer(selectedOpt) {
+      const q = quizState.questions[quizState.currentIndex];
+      const feedbackEl = document.getElementById('quiz-feedback');
+      const isCorrect = selectedOpt === q.correctAnswer;
+
+      if (isCorrect) {
+        quizState.score += 1;
+        feedbackEl.innerHTML = `
+          <div style="color:var(--accent-emerald); font-weight:600; margin-bottom:0.5rem;">✓ Correct!</div>
+          <p style="font-size:0.9rem; color:var(--text-sub);">${q.explanation}</p>
+        `;
+      } else {
+        feedbackEl.innerHTML = `
+          <div style="color:var(--accent-rose); font-weight:600; margin-bottom:0.5rem;">✗ Incorrect. Correct answer: ${q.correctAnswer}</div>
+          <p style="font-size:0.9rem; color:var(--text-sub);">${q.explanation}</p>
+        `;
+      }
+
+      feedbackEl.style.display = 'block';
+
+      document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+
+      setTimeout(() => {
+        quizState.currentIndex += 1;
+        renderQuizQuestion();
+      }, 2200);
+    }
+
+    function renderQuizResults() {
+      const container = document.getElementById('quiz-container');
+      const pct = Math.round((quizState.score / quizState.questions.length) * 100);
+
+      state.stats.quizScore = pct;
+      localStorage.setItem('mathmate_stats', JSON.stringify(state.stats));
+      updateStatsUI();
+
+      container.innerHTML = `
+        <div class="quiz-box" style="text-align:center;">
+          <div style="font-size:3rem; margin-bottom:0.5rem;">🏆</div>
+          <h2 style="font-family:'Outfit';">Quiz Completed!</h2>
+          <div style="font-size:2.5rem; font-weight:700; color:var(--accent-cyan); margin:1rem 0;">
+            ${quizState.score} / ${quizState.questions.length} (${pct}%)
+          </div>
+          <p style="color:var(--text-muted); margin-bottom:1.5rem;">
+            ${pct >= 80 ? 'Outstanding performance! You have mastered these concepts.' : 'Good effort! Review the Learn tab to boost your score.'}
+          </p>
+
+          <button class="btn-primary" onclick="startQuiz('${quizState.activeMode}')">Try Another Quiz</button>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
